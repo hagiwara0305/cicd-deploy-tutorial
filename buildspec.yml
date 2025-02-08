@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 100577864833.dkr.ecr.ap-northeast-1.amazonaws.com
+      - REPOSITORY_URI=100577864833.dkr.ecr.ap-northeast-1.amazonaws.com/cicd-deploy-repository
+  build:
+    commands:
+      - mvn package -f ./demo_project/
+      - docker build -t $REPOSITORY_URI:latest .
+  post_build:
+    commands:
+      - docker push $REPOSITORY_URI:latest
+      - printf '[{"name":"DeployToEcsFargateContainerName","imageUri":"%s"}]' $REPOSITORY_URI:latest > BuildArtifact.json
+artifacts:
+  files: BuildArtifact.json
