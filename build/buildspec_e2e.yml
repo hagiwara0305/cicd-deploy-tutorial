@@ -1,0 +1,17 @@
+
+version: 0.2
+ 
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  build:
+    commands:
+      # Selenium用 ChromeDriverをダウンロード
+      - echo download Selenium ChromeDriver
+      - wget https://storage.googleapis.com/chrome-for-testing-public/133.0.6943.126/mac-arm64/chromedriver-mac-arm64.zip
+      - unzip chromedriver-mac-arm64.zip
+      - mv ./chromedriver-mac-arm64/chromediriver.exe /usr/bin/chromedriver
+      # E2Eテスト実行
+      - echo Build started on `date`
+      - mvn -DargLine="-Dwebdriver.chrome.driver=/usr/bin/chromedriver.exe" test
