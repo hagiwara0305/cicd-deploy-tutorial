@@ -1,0 +1,18 @@
+
+version: 0.2
+ 
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  build:
+    commands:
+      # Selenium用 ChromeDriverをダウンロード
+      - echo download Selenium ChromeDriver
+      - curl https://intoli.com/install-google-chrome.sh | bash
+      - wget https://storage.googleapis.com/chrome-for-testing-public/133.0.6943.126/linux64/chromedriver-linux64.zip
+      - unzip chromedriver-linux64.zip
+      - mv ./chromedriver-linux64/chromedriver /usr/bin/chromedriver
+      # E2Eテスト実行
+      - echo Build started on `date`
+      - mvn -f ./E2eTest/ -DargLine="-Dwebdriver.chrome.driver=/usr/bin/chromedriver" test

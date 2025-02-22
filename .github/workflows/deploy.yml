@@ -37,13 +37,16 @@ jobs:
     steps:
       - name: checkout local action
         uses: actions/checkout@v3
-      - name: Set up AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-region: ${{ secrets.AWS_REGION }}
+      # - name: Set up AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
       - name: initservice_ecs_deployialize
         uses: ./.github/workflows/deploy-ecs
+        env:
+          AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
   service_a_deploy:
     if: ${{ !cancelled() && !failure() && needs.prepare.outputs.service-a-diff-count > 0 }}
