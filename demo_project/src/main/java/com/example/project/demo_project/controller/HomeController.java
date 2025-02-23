@@ -1,5 +1,6 @@
 package com.example.project.demo_project.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class HomeController {
     }
 
     // ユーザリストを取得するためのサービスクラス
+    @Autowired
     private final UserListService service;
 
     // DBアクセス + サービスクラス

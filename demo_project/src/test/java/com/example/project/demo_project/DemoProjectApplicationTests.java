@@ -8,9 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.example.project.demo_project.service.UserListService;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class DemoProjectApplicationTests {
