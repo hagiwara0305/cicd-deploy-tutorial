@@ -2,6 +2,7 @@ package demo.com;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +12,15 @@ public class AppTest {
     // mvn -DargLine="-Dwebdriver.chrome.driver=C:\chromedriver\chromedriver.exe" test
     @Test
     public void testGoogleSearch() throws InterruptedException {
-        final WebDriver driver = new ChromeDriver();
+        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+
+        ChromeDriverService service = new ChromeDriverService
+            .Builder()
+            .withWhitelistedIps("")
+            .withVerbose(true)
+            .build();
+        final WebDriver driver = new ChromeDriver(service);
+        
         // 本来であれば作成したWebサービスのURLを指定するが、ドメインを取得していないため
         // Googleへアクセスできることを確認する
         driver.get("http://www.google.com");

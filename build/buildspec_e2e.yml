@@ -1,4 +1,3 @@
-
 version: 0.2
  
 phases:
@@ -9,9 +8,17 @@ phases:
     commands:
       # Selenium用 ChromeDriverをダウンロード
       - echo download Selenium ChromeDriver
-      - wget https://storage.googleapis.com/chrome-for-testing-public/133.0.6943.126/mac-arm64/chromedriver-mac-arm64.zip
-      - unzip chromedriver-mac-arm64.zip
-      - mv ./chromedriver-mac-arm64/chromediriver.exe /usr/bin/chromedriver
+      - curl --output chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/133.0.6943.126/linux64/chromedriver-linux64.zip
+      - jar --extract --verbose --file=chromedriver-linux64.zip
+      - chmod +x chromedriver-linux64/chromedriver
+      - yum update
+      # found https://gist.github.com/kaze/eb35d0a815553204cb6d1a9129b20163
+      # chromedriver needs some os dependencies.
+      # - yum install --assumeyes libXi-devel
+      # - wget https://storage.googleapis.com/chrome-for-testing-public/133.0.6943.126/linux64/chromedriver-linux64.zip
+      # - unzip chromedriver-linux64.zip
+      # - mv ./chromedriver-linux64/chromedriver /usr/bin/chromedriver
+
       # E2Eテスト実行
       - echo Build started on `date`
-      - mvn -f ../E2eTest/ -DargLine="-Dwebdriver.chrome.driver=/usr/bin/chromedriver.exe" test
+      - mvn -f ./E2eTest/ test
