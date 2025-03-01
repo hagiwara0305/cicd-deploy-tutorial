@@ -7,6 +7,6 @@ public class AppTest {
     @Test
     public void appTest() {
         // サンプルコード
-        assertTrue(true);
+        assertTrue(false);
     }
 }
