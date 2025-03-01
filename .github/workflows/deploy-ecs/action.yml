@@ -14,6 +14,11 @@ permissions:
 runs:
   using: 'composite'
   steps:
+    - name: Running unit tests
+      shell: bash
+      run: |
+        mvn -f ./demo_project/ test
+
     - name: Checkout code
       uses: actions/checkout@v2
 

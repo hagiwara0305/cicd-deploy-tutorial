@@ -3,6 +3,7 @@ package com.example.project.demo_project;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,9 @@ public class DBUnitTests {
     private UserListService userListService;
 
     @Test
+    @DisplayName("DBUnitを使用したテスト用DBへアクセス")
     @DatabaseSetup("/dataset/user_find_by_id.xml")
     public void testUserTable() throws Exception {
-        // DBUnitを使用したテスト用DBへアクセス
-        // Arrange
         UserModel expectedUser = UserModel.builder()
             .user_id(1)
             .user_name("サンプルユーザ")
