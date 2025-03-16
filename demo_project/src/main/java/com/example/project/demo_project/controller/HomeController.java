@@ -19,7 +19,7 @@ public class HomeController {
     @RequestMapping(value = "/")
     @ResponseBody
     public String hello(){
-        return "Hello demo world!";
+        return "update1 demo world!";
     }
 
     // HTTPメソッド
