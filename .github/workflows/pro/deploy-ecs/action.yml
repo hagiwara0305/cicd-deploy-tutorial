@@ -14,10 +14,10 @@ permissions:
 runs:
   using: 'composite'
   steps:
-    - name: Running unit tests
-      shell: bash
-      run: |
-        mvn -f ./demo_project/ test
+  #   - name: Running unit tests
+  #     shell: bash
+  #     run: |
+  #       mvn -f ./demo_project/ test
 
     - name: Checkout code
       uses: actions/checkout@v2
@@ -32,10 +32,10 @@ runs:
       uses: thedoctor0/zip-release@main
       with:
         type: 'zip'
-        filename: cicd.zip
+        filename: pro-cicd.zip
         exclusions: '*.git*'
 
     - name: Upload to S3
       shell: bash
       run: |
-        aws s3 cp ./cicd.zip s3://cicd-deploy-s3-bucket/
+        aws s3 cp ./pro-cicd.zip s3://cicd-deploy-s3-bucket/

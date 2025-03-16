@@ -14,11 +14,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class DemoProjectApplicationTests {
 
     @Test
-    @DisplayName("/へのGETリクエストを行い、\"Hello demo world!\"が返ってくることを確認")
+    @DisplayName("/へのGETリクエストを行い、\"update1 demo world!\"が返ってくることを確認")
     public void testRootEndpoint(@Autowired MockMvc mvc) throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())   // ステータス200
-                .andExpect(MockMvcResultMatchers.content().string("Hello demo world!"));    // 返却値チェック
+                .andExpect(MockMvcResultMatchers.content().string("update1 demo world!"));    // 返却値チェック
     }
 
     @Test

@@ -1,0 +1,83 @@
+name: common deploy
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      service-ecs-diff-count: ${{ steps.service_ecs_changes.outputs.diff-count }}
+      service-a-diff-count: ${{ steps.service_a_changes.outputs.diff-count }}
+      service-b-diff-count: ${{ steps.service_b_changes.outputs.diff-count }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - id: service_ecs_changes
+        run: echo diff-count=`git diff HEAD~ --name-only --relative=demo_project | wc -l` >> $GITHUB_OUTPUT
+      - id: service_a_changes
+        run: echo diff-count=`git diff HEAD~ --name-only --relative=lambda/lambda-a | wc -l` >> $GITHUB_OUTPUT
+      - id: service_b_changes
+        run: echo diff-count=`git diff HEAD~ --name-only --relative=lambda/lambda-b | wc -l` >> $GITHUB_OUTPUT
+
+  service_ecs_deploy:
+    if: ${{ !cancelled() && !failure() && needs.prepare.outputs.service-ecs-diff-count > 0 }}
+    needs:
+      - prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout local action
+        uses: actions/checkout@v3
+      # - name: Set up AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      - name: initservice_ecs_deployialize
+        uses: ./.github/workflows/pro/deploy-ecs
+        env:
+          AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+  service_a_deploy:
+    if: ${{ !cancelled() && !failure() && needs.prepare.outputs.service-a-diff-count > 0 }}
+    needs:
+      - prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout local action
+        uses: actions/checkout@v3
+      - name: Set up AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: service_a_deploy
+        uses: ./.github/workflows/pro/deploy-lambda
+        env:
+          FUNCTION: lambda-a
+
+  service_b_deploy:
+    if: ${{ !cancelled() && !failure() && needs.prepare.outputs.service-b-diff-count > 0 }}
+    needs:
+      - prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout local action
+        uses: actions/checkout@v3
+      - name: Set up AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: service_a_deploy
+        uses: ./.github/workflows/pro/deploy-lambda
