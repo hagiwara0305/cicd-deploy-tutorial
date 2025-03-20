@@ -1,0 +1,41 @@
+name: Upload to ECS
+
+on:
+  workflow_call:
+    inputs:
+      detail:
+        type: string
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+runs:
+  using: 'composite'
+  steps:
+    # - name: Running unit tests
+    #   shell: bash
+    #   run: |
+    #     mvn -f ./demo_project/ test
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Archive Release
+      uses: thedoctor0/zip-release@main
+      with:
+        type: 'zip'
+        filename: cicd.zip
+        exclusions: '*.git*'
+
+    - name: Upload to S3
+      shell: bash
+      run: |
+        aws s3 cp ./cicd.zip s3://cicd-deploy-s3-bucket/

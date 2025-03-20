@@ -1,0 +1,21 @@
+name: Upload to Lambda
+
+on:
+  workflow_call:
+    inputs:
+      detail:
+        type: string
+        required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: lambda update
+      shell: bash
+      run: |
+        echo $FUNCTION
+        cd lambda/$FUNCTION && zip -r package.zip ./*
+        aws lambda update-function-code --function-name $FUNCTION --zip-file fileb://package.zip --publish
